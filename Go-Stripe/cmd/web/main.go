@@ -18,7 +18,7 @@ type config struct {
 	env  string
 	api  string
 	db   struct {
-		dsn string
+		dsn string //Data Source Name
 	}
 	stripe struct {
 		secret string
@@ -36,7 +36,7 @@ type application struct {
 
 func (app *application) serve() error {
 	srv := &http.Server{
-		Addr:              fmt.Printf(":%d", app.config.port),
+		Addr:              fmt.Sprintf(":%d", app.config.port),
 		Handler:           app.routes(),
 		IdleTimeout:       30 * time.Second,
 		ReadTimeout:       10 * time.Second,
@@ -44,8 +44,7 @@ func (app *application) serve() error {
 		WriteTimeout:      5 * time.Second,
 	}
 
-	app.infoLog.Println("Starting HTTP server in %s mode on port %d", app.config.env, app.config.port)
-
+	app.infoLog.Println(fmt.Sprintf("Starting HTTP server in %s mode on port %d", app.config.env, app.config.port))
 	return srv.ListenAndServe()
 }
 
@@ -74,7 +73,7 @@ func main() {
 		version:       version,
 	}
 
-	err = app.serve()
+	err := app.serve()
 	if err != nil {
 		app.errorLog.Println(err)
 		log.Fatal(err)
